@@ -24,7 +24,8 @@
 		"fabric-datagen": [
 			"net.yuntal.autofish.AutoFishingDataGenerator"
 		],
-		"client": ["net.yuntal.autofish.AutoFishingClient"]
+		"client": ["net.yuntal.autofish.AutoFishingClient"],
+		"modmenu": ["net.yuntal.autofish.ModMenuIntegration"]
 	},
 	"mixins": [
 		"auto-fishing.mixins.json"
@@ -33,6 +34,8 @@
 		"fabricloader": ">=0.19.2",
 		"minecraft": "~26.1.2",
 		"java": ">=25",
-		"fabric-api": "*"
+		"fabric-api": "*",
+		"cloth-config": "*",
+		"modmenu": "*"
 	}
 }

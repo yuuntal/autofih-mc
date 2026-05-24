@@ -1,0 +1,11 @@
+package net.yuntal.autofish;
+
+import me.shedaniel.autoconfig.ConfigData;
+import me.shedaniel.autoconfig.annotation.Config;
+
+@Config(name = "auto-fishing")
+public class AutoFishConfig implements ConfigData {
+    public int recastDelay = 20;
+    public int castCooldown = 40;
+    public double biteThreshold = -0.08;
+}
