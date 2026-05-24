@@ -1,0 +1,37 @@
+{
+	"schemaVersion": 1,
+	"id": "auto-fishing",
+	"version": "${version}",
+	"name": "auto fishing",
+	"description": "the auto fih mod",
+	"authors": [
+		"yuntal"
+	],
+	"contact": {
+		"homepage": "",
+		"sources": ""
+	},
+	"license": "CC0-1.0",
+	"icon": "assets/auto-fishing/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"net.yuntal.autofish.AutoFishing"
+		],
+		"client": [
+			"net.yuntal.autofish.AutoFishingClient"
+		],
+		"fabric-datagen": [
+			"net.yuntal.autofish.AutoFishingDataGenerator"
+		]
+	},
+	"mixins": [
+		"auto-fishing.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.19.2",
+		"minecraft": "~26.1.2",
+		"java": ">=25",
+		"fabric-api": "*"
+	}
+}
