@@ -23,7 +23,8 @@
 		],
 		"fabric-datagen": [
 			"net.yuntal.autofish.AutoFishingDataGenerator"
-		]
+		],
+		"client": ["net.yuntal.autofish.AutoFishingClient"]
 	},
 	"mixins": [
 		"auto-fishing.mixins.json"
