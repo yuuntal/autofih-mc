@@ -67,6 +67,26 @@ public class ModMenuIntegration implements ModMenuApi {
                     .setSaveConsumer(val -> config.minDurability = val)
                     .build());
 
+            ConfigCategory hud = builder.getOrCreateCategory(Component.literal("HUD"));
+
+            hud.addEntry(entryBuilder
+                    .startBooleanToggle(Component.literal("Show HUD"), config.showHud)
+                    .setDefaultValue(true)
+                    .setTooltip(Component.literal("Show the fishing tracker overlay"))
+                    .setSaveConsumer(val -> config.showHud = val)
+                    .build());
+
+            hud.addEntry(entryBuilder
+                    .startBooleanToggle(Component.literal("Show Rate per Hour"), config.usePerHour)
+                    .setDefaultValue(true)
+                    .setTooltip(Component.literal("Toggle between fish/hr and fish/min"))
+                    .setSaveConsumer(val -> config.usePerHour = val)
+                    .build());
+
+            hud.addEntry(entryBuilder
+                    .startTextDescription(Component.literal("Stats are reset when you restart the game."))
+                    .build());
+
             return builder.build();
         };
     }

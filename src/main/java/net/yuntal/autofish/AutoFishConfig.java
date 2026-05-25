@@ -10,4 +10,10 @@ public class AutoFishConfig implements ConfigData {
     public int castCooldown = 40;
     public boolean durabilityProtection = true;
     public int minDurability = 5;
+    public HudDisplayMode showHud = HudDisplayMode.WHEN_FISHING;
+    public boolean usePerHour = true;
+
+    public enum HudDisplayMode {
+        NONE, WHEN_FISHING, ALWAYS
+    }
 }

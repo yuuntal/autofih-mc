@@ -4,6 +4,12 @@ import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
+import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.hud.VanillaHudElements;
+import net.minecraft.client.DeltaTracker;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.Items;
 
@@ -20,6 +26,12 @@ public class AutoFishingClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         AutoConfig.register(AutoFishConfig.class, GsonConfigSerializer::new);
+
+        HudElementRegistry.attachElementBefore(
+            VanillaHudElements.CHAT,
+            Identifier.fromNamespaceAndPath(MOD_ID, "fishing_stats"),
+            AutoFishingClient::extract
+        );
 
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             if (client.player == null || client.level == null) return;
@@ -93,9 +105,23 @@ public class AutoFishingClient implements ClientModInitializer {
 
             if (biteDetected) {
                 client.gameMode.useItem(client.player, fishingHand);
+                FishingStats.onCatch();
                 recastTimer = config.recastDelay;
                 biteDetected = false;
             }
         });
+    }
+
+    private static void extract(GuiGraphicsExtractor graphics, DeltaTracker tickCounter) {
+        AutoFishConfig config = AutoConfig.getConfigHolder(AutoFishConfig.class).getConfig();
+        if (!config.enabled || !config.showHud) return;
+
+        Minecraft client = Minecraft.getInstance();
+        String caughtText = "Caught: " + FishingStats.totalCaught;
+        double rate = config.usePerHour ? FishingStats.getCatchPerHour() : FishingStats.getCatchPerMinute();
+        String rateText = String.format("%.1f fish/%s", rate, config.usePerHour ? "hr" : "min");
+
+        graphics.text(client.font, caughtText, 10, 10, 0xFFFFFFFF, true);
+        graphics.text(client.font, rateText, 10, 20, 0xFFAAAAAA, true);
     }
 }
