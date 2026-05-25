@@ -70,9 +70,9 @@ public class ModMenuIntegration implements ModMenuApi {
             ConfigCategory hud = builder.getOrCreateCategory(Component.literal("HUD"));
 
             hud.addEntry(entryBuilder
-                    .startBooleanToggle(Component.literal("Show HUD"), config.showHud)
-                    .setDefaultValue(true)
-                    .setTooltip(Component.literal("Show the fishing tracker overlay"))
+                    .startEnumSelector(Component.literal("HUD Display Mode"), AutoFishConfig.HudDisplayMode.class, config.showHud)
+                    .setDefaultValue(AutoFishConfig.HudDisplayMode.WHEN_FISHING)
+                    .setTooltip(Component.literal("When to show the fishing tracker overlay"))
                     .setSaveConsumer(val -> config.showHud = val)
                     .build());
 

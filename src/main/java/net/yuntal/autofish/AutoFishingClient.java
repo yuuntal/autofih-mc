@@ -114,9 +114,17 @@ public class AutoFishingClient implements ClientModInitializer {
 
     private static void extract(GuiGraphicsExtractor graphics, DeltaTracker tickCounter) {
         AutoFishConfig config = AutoConfig.getConfigHolder(AutoFishConfig.class).getConfig();
-        if (!config.enabled || !config.showHud) return;
+        if (!config.enabled || config.showHud == AutoFishConfig.HudDisplayMode.NONE) return;
 
         Minecraft client = Minecraft.getInstance();
+        if (config.showHud == AutoFishConfig.HudDisplayMode.WHEN_FISHING) {
+            boolean holdingRod = client.player != null && (
+                client.player.getItemInHand(InteractionHand.MAIN_HAND).getItem() == Items.FISHING_ROD ||
+                client.player.getItemInHand(InteractionHand.OFF_HAND).getItem() == Items.FISHING_ROD
+            );
+            if (!holdingRod) return;
+        }
+
         String caughtText = "Caught: " + FishingStats.totalCaught;
         double rate = config.usePerHour ? FishingStats.getCatchPerHour() : FishingStats.getCatchPerMinute();
         String rateText = String.format("%.1f fish/%s", rate, config.usePerHour ? "hr" : "min");
