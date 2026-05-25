@@ -42,15 +42,6 @@ public class ModMenuIntegration implements ModMenuApi {
                     .setSaveConsumer(val -> config.castCooldown = val)
                     .build());
 
-            general.addEntry(entryBuilder
-                    .startDoubleField(Component.literal("Bite Threshold"), config.biteThreshold)
-                    .setDefaultValue(-0.08)
-                    .setMin(-1.0)
-                    .setMax(0.0)
-                    .setTooltip(Component.literal("Downward velocity needed to trigger a reel-in"))
-                    .setSaveConsumer(val -> config.biteThreshold = val)
-                    .build());
-
             return builder.build();
         };
     }

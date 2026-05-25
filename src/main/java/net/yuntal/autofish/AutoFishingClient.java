@@ -12,9 +12,10 @@ public class AutoFishingClient implements ClientModInitializer {
 
     private int recastTimer = -1;
     private int castCooldown = 0;
-    private int inWaterTicks = 0;
     private boolean hookWasNull = true;
     private InteractionHand fishingHand = InteractionHand.MAIN_HAND;
+
+    public static boolean biteDetected = false;
 
     @Override
     public void onInitializeClient() {
@@ -33,8 +34,8 @@ public class AutoFishingClient implements ClientModInitializer {
             if (activeHand == null) {
                 recastTimer = -1;
                 castCooldown = 0;
-                inWaterTicks = 0;
                 hookWasNull = true;
+                biteDetected = false;
                 return;
             }
 
@@ -56,14 +57,13 @@ public class AutoFishingClient implements ClientModInitializer {
 
             if (hook == null) {
                 hookWasNull = true;
-                inWaterTicks = 0;
+                biteDetected = false;
                 return;
             }
 
             if (hookWasNull) {
                 hookWasNull = false;
                 castCooldown = config.castCooldown;
-                inWaterTicks = 0;
             }
 
             if (castCooldown > 0) {
@@ -71,15 +71,10 @@ public class AutoFishingClient implements ClientModInitializer {
                 return;
             }
 
-            if (hook.isInWater()) {
-                inWaterTicks++;
-            }
-
-            if (inWaterTicks < 10) return;
-            if (hook.getDeltaMovement().y < config.biteThreshold) {
+            if (biteDetected) {
                 client.gameMode.useItem(client.player, fishingHand);
                 recastTimer = config.recastDelay;
-                inWaterTicks = 0;
+                biteDetected = false;
             }
         });
     }
