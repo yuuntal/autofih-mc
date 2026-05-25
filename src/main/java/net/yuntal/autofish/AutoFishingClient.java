@@ -5,7 +5,6 @@ import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
 public class AutoFishingClient implements ClientModInitializer {
@@ -15,6 +14,7 @@ public class AutoFishingClient implements ClientModInitializer {
     private int castCooldown = 0;
     private int inWaterTicks = 0;
     private boolean hookWasNull = true;
+    private InteractionHand fishingHand = InteractionHand.MAIN_HAND;
 
     @Override
     public void onInitializeClient() {
@@ -23,14 +23,22 @@ public class AutoFishingClient implements ClientModInitializer {
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             if (client.player == null || client.level == null) return;
 
-            ItemStack heldItem = client.player.getItemInHand(InteractionHand.MAIN_HAND);
-            if (heldItem.getItem() != Items.FISHING_ROD) {
+            InteractionHand activeHand = null;
+            if (client.player.getItemInHand(InteractionHand.MAIN_HAND).getItem() == Items.FISHING_ROD) {
+                activeHand = InteractionHand.MAIN_HAND;
+            } else if (client.player.getItemInHand(InteractionHand.OFF_HAND).getItem() == Items.FISHING_ROD) {
+                activeHand = InteractionHand.OFF_HAND;
+            }
+
+            if (activeHand == null) {
                 recastTimer = -1;
                 castCooldown = 0;
                 inWaterTicks = 0;
                 hookWasNull = true;
                 return;
             }
+
+            fishingHand = activeHand;
 
             AutoFishConfig config = AutoConfig.getConfigHolder(AutoFishConfig.class).getConfig();
 
@@ -39,7 +47,7 @@ public class AutoFishingClient implements ClientModInitializer {
                 return;
             }
             if (recastTimer == 0) {
-                client.gameMode.useItem(client.player, InteractionHand.MAIN_HAND);
+                client.gameMode.useItem(client.player, fishingHand);
                 recastTimer = -1;
                 return;
             }
@@ -52,7 +60,6 @@ public class AutoFishingClient implements ClientModInitializer {
                 return;
             }
 
-            // new cast
             if (hookWasNull) {
                 hookWasNull = false;
                 castCooldown = config.castCooldown;
@@ -69,10 +76,8 @@ public class AutoFishingClient implements ClientModInitializer {
             }
 
             if (inWaterTicks < 10) return;
-
-
             if (hook.getDeltaMovement().y < config.biteThreshold) {
-                client.gameMode.useItem(client.player, InteractionHand.MAIN_HAND);
+                client.gameMode.useItem(client.player, fishingHand);
                 recastTimer = config.recastDelay;
                 inWaterTicks = 0;
             }
