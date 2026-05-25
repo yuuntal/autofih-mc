@@ -43,6 +43,14 @@ public class AutoFishingClient implements ClientModInitializer {
 
             AutoFishConfig config = AutoConfig.getConfigHolder(AutoFishConfig.class).getConfig();
 
+            if (!config.enabled) {
+                recastTimer = -1;
+                castCooldown = 0;
+                hookWasNull = true;
+                biteDetected = false;
+                return;
+            }
+
             if (recastTimer > 0) {
                 recastTimer--;
                 return;

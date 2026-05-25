@@ -25,6 +25,13 @@ public class ModMenuIntegration implements ModMenuApi {
             ConfigCategory general = builder.getOrCreateCategory(Component.literal("General"));
 
             general.addEntry(entryBuilder
+                    .startBooleanToggle(Component.literal("Enabled"), config.enabled)
+                    .setDefaultValue(true)
+                    .setTooltip(Component.literal("Whether the auto-fishing logic should be active"))
+                    .setSaveConsumer(val -> config.enabled = val)
+                    .build());
+
+            general.addEntry(entryBuilder
                     .startIntField(Component.literal("Recast Delay (ticks)"), config.recastDelay)
                     .setDefaultValue(20)
                     .setMin(1)
