@@ -24,7 +24,6 @@
 		"fabric-datagen": [
 			"net.yuntal.autofish.AutoFishingDataGenerator"
 		],
-		"client": ["net.yuntal.autofish.AutoFishingClient"],
 		"modmenu": ["net.yuntal.autofish.ModMenuIntegration"]
 	},
 	"mixins": [
