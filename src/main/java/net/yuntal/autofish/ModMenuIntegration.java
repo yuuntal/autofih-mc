@@ -77,6 +77,31 @@ public class ModMenuIntegration implements ModMenuApi {
                     .build());
 
             hud.addEntry(entryBuilder
+                    .startEnumSelector(Component.literal("HUD Anchor"), AutoFishConfig.HudAnchor.class, config.hudAnchor)
+                    .setDefaultValue(AutoFishConfig.HudAnchor.TOP_LEFT)
+                    .setTooltip(Component.literal("Which corner of the screen to anchor the HUD to"))
+                    .setSaveConsumer(val -> config.hudAnchor = val)
+                    .build());
+
+            hud.addEntry(entryBuilder
+                    .startIntField(Component.literal("HUD X Offset"), config.hudXOffset)
+                    .setDefaultValue(10)
+                    .setMin(-1000)
+                    .setMax(1000)
+                    .setTooltip(Component.literal("Horizontal distance from the anchor corner"))
+                    .setSaveConsumer(val -> config.hudXOffset = val)
+                    .build());
+
+            hud.addEntry(entryBuilder
+                    .startIntField(Component.literal("HUD Y Offset"), config.hudYOffset)
+                    .setDefaultValue(10)
+                    .setMin(-1000)
+                    .setMax(1000)
+                    .setTooltip(Component.literal("Vertical distance from the anchor corner"))
+                    .setSaveConsumer(val -> config.hudYOffset = val)
+                    .build());
+
+            hud.addEntry(entryBuilder
                     .startBooleanToggle(Component.literal("Show Rate per Hour"), config.usePerHour)
                     .setDefaultValue(true)
                     .setTooltip(Component.literal("Toggle between fish/hr and fish/min"))

@@ -129,7 +129,39 @@ public class AutoFishingClient implements ClientModInitializer {
         double rate = config.usePerHour ? FishingStats.getCatchPerHour() : FishingStats.getCatchPerMinute();
         String rateText = String.format("%.1f fish/%s", rate, config.usePerHour ? "hr" : "min");
 
-        graphics.text(client.font, caughtText, 10, 10, 0xFFFFFFFF, true);
-        graphics.text(client.font, rateText, 10, 20, 0xFFAAAAAA, true);
+        int x = config.hudXOffset;
+        int y = config.hudYOffset;
+
+        int screenWidth = client.getWindow().getGuiScaledWidth();
+        int screenHeight = client.getWindow().getGuiScaledHeight();
+        int line1Width = client.font.width(caughtText);
+        int line2Width = client.font.width(rateText);
+        int maxTextWidth = Math.max(line1Width, line2Width);
+
+        switch (config.hudAnchor) {
+            case TOP_RIGHT:
+                x = screenWidth - maxTextWidth - config.hudXOffset;
+                break;
+            case BOTTOM_LEFT:
+                y = screenHeight - 20 - config.hudYOffset; // 20 for two lines of text
+                break;
+            case BOTTOM_RIGHT:
+                x = screenWidth - maxTextWidth - config.hudXOffset;
+                y = screenHeight - 20 - config.hudYOffset;
+                break;
+            default: // TOP_LEFT handled by initial values
+                break;
+        }
+
+        // Adjust text alignment for lines if they have different widths on the right side
+        int line1X = x;
+        int line2X = x;
+        if (config.hudAnchor == AutoFishConfig.HudAnchor.TOP_RIGHT || config.hudAnchor == AutoFishConfig.HudAnchor.BOTTOM_RIGHT) {
+            line1X = x + (maxTextWidth - line1Width);
+            line2X = x + (maxTextWidth - line2Width);
+        }
+
+        graphics.text(client.font, caughtText, line1X, y, 0xFFFFFFFF, true);
+        graphics.text(client.font, rateText, line2X, y + 10, 0xFFAAAAAA, true);
     }
 }
