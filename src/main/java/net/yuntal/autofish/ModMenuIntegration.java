@@ -49,6 +49,24 @@ public class ModMenuIntegration implements ModMenuApi {
                     .setSaveConsumer(val -> config.castCooldown = val)
                     .build());
 
+            ConfigCategory protection = builder.getOrCreateCategory(Component.literal("Protection"));
+
+            protection.addEntry(entryBuilder
+                    .startBooleanToggle(Component.literal("Durability Protection"), config.durabilityProtection)
+                    .setDefaultValue(true)
+                    .setTooltip(Component.literal("Stop fishing if the rod's durability is too low"))
+                    .setSaveConsumer(val -> config.durabilityProtection = val)
+                    .build());
+
+            protection.addEntry(entryBuilder
+                    .startIntField(Component.literal("Min Durability"), config.minDurability)
+                    .setDefaultValue(5)
+                    .setMin(1)
+                    .setMax(100)
+                    .setTooltip(Component.literal("Minimum durability required to keep fishing"))
+                    .setSaveConsumer(val -> config.minDurability = val)
+                    .build());
+
             return builder.build();
         };
     }

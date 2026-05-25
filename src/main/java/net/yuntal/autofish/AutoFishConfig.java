@@ -8,4 +8,6 @@ public class AutoFishConfig implements ConfigData {
     public boolean enabled = true;
     public int recastDelay = 20;
     public int castCooldown = 40;
+    public boolean durabilityProtection = true;
+    public int minDurability = 5;
 }

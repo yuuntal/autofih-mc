@@ -40,6 +40,7 @@ public class AutoFishingClient implements ClientModInitializer {
             }
 
             fishingHand = activeHand;
+            var stack = client.player.getItemInHand(fishingHand);
 
             AutoFishConfig config = AutoConfig.getConfigHolder(AutoFishConfig.class).getConfig();
 
@@ -49,6 +50,17 @@ public class AutoFishingClient implements ClientModInitializer {
                 hookWasNull = true;
                 biteDetected = false;
                 return;
+            }
+
+            if (config.durabilityProtection) {
+                int durability = stack.getMaxDamage() - stack.getDamageValue();
+                if (stack.isDamageableItem() && durability <= config.minDurability) {
+                    recastTimer = -1;
+                    castCooldown = 0;
+                    hookWasNull = true;
+                    biteDetected = false;
+                    return;
+                }
             }
 
             if (recastTimer > 0) {
