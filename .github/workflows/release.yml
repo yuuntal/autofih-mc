@@ -41,6 +41,7 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           name: Auto Fishing v${{ steps.get_version.outputs.MOD_VERSION }} for Minecraft ${{ steps.get_version.outputs.MC_VERSION }}
+          tag_name: v${{ steps.get_version.outputs.MOD_VERSION }}
           files: |
             build/libs/*.jar
             !build/libs/*-dev.jar
